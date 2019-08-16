@@ -1,0 +1,8 @@
+{
+  "name": "enframe",
+  "version": "0.0.1",
+  "bin": "./enframe.js",
+  "dependencies": {
+    "typescript": "^3.5.3"
+  }
+}

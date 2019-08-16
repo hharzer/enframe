@@ -1,0 +1,10 @@
+# from yarn
+node_modules
+yarn-error.log
+
+# from parcel
+dist
+.cache
+
+# from direnv
+.envrc
