@@ -2,7 +2,9 @@
   "name": "enframe",
   "version": "0.0.3",
   "bin": "./enframe.js",
-  "dependencies": {
-    "typescript": "^3.5.3"
-  }
+  "description": "Enframe facilitates rapid application creation and continued maintainance.",
+  "repository": "git@github.com:aegatlin/binlink.git",
+  "author": "Austin Gatlin <austin@gatlin.io>",
+  "license": "MIT",
+  "private": false
 }
