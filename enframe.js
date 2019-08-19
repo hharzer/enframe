@@ -8,6 +8,8 @@ const rootDir = file => path.join(process.cwd(), file)
 const enframeDir = file =>
   path.join(path.join(process.cwd(), 'node_modules/enframe'), file)
 
+let packJson = require(rootDir('package.json'))
+
 const filesToCopy = [
   '.gitignore',
   'LICENSE',
@@ -36,7 +38,8 @@ const yarnAdd = (isDevDep, dep) => {
 }
 
 const updatePackJsonScripts = () => {
-  const packJson = require(rootDir('package.json'))
+  delete require.cache[require.resolve(rootDir('package.json'))]
+  packJson = require(rootDir('package.json'))
 
   let packJsonScripts
 
@@ -58,7 +61,7 @@ const updatePackJsonScripts = () => {
 }
 
 const executeScript = () => {
-  if (!fs.existsSync(rootDir('package.json'))) {
+  if (!packJson.name) {
     child_process.execSync(`yarn init`, {
       encoding: 'utf8',
       stdio: 'inherit'
