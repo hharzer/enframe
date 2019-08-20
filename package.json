@@ -6,5 +6,15 @@
   "repository": "git@github.com:aegatlin/binlink.git",
   "author": "Austin Gatlin <austin@gatlin.io>",
   "license": "MIT",
-  "private": false
+  "private": false,
+  "scripts": {
+    "c": "yarn bundle && yarn addEnv && chmod 755 enframe.js",
+    "bundle": "parcel build -t node -d ./ enframe.ts",
+    "addEnv": "echo '#! /usr/bin/env node\n' | cat - enframe.js > temp && mv temp enframe.js"
+  },
+  "devDependencies": {
+    "@types/node": "^12.7.2",
+    "parcel": "^1.12.3",
+    "typescript": "^3.5.3"
+  }
 }
