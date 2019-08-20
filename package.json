@@ -1,16 +1,16 @@
 {
   "name": "enframe",
   "version": "0.0.5",
-  "bin": "./enframe.js",
+  "bin": "./bin/enframe.js",
   "description": "Enframe facilitates rapid application creation and continued maintainance.",
   "repository": "git@github.com:aegatlin/binlink.git",
   "author": "Austin Gatlin <austin@gatlin.io>",
   "license": "MIT",
   "private": false,
   "scripts": {
-    "c": "yarn bundle && yarn addEnv && chmod 755 enframe.js",
-    "bundle": "parcel build -t node -d ./ enframe.ts",
-    "addEnv": "echo '#! /usr/bin/env node\n' | cat - enframe.js > temp && mv temp enframe.js"
+    "c": "yarn bundle && yarn addEnv && chmod 755 bin/enframe.js",
+    "bundle": "parcel build -t node -d bin src/enframe.ts",
+    "addEnv": "echo '#! /usr/bin/env node\n' | cat - bin/enframe.js > temp && mv temp bin/enframe.js"
   },
   "devDependencies": {
     "@types/node": "^12.7.2",
