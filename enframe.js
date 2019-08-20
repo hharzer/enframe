@@ -11,7 +11,6 @@ const enframeDir = file =>
 let packJson = require(rootDir('package.json'))
 
 const filesToCopy = [
-  '.gitignore',
   'LICENSE',
   'CODE_OF_CONDUCT.md',
   'tsconfig.json',
@@ -72,6 +71,9 @@ const executeScript = () => {
     fs.copyFileSync(enframeDir(file), rootDir(file))
     console.log(`Enframe has added or updated the file: ${file}.`)
   })
+
+  fs.copyFileSync(enframeDir('gitignore'), rootDir('.gitignore'))
+  console.log('Enframe has added or updated the file: .gitignore.')
 
   depsToInstall.forEach(dep => {
     const isDevDep = false
