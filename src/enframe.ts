@@ -1,68 +1,23 @@
-import { writeFileSync, mkdirSync, existsSync, copyFileSync } from 'fs'
-import { join } from 'path'
+import { mkdirSync, existsSync } from 'fs'
 import { execSync } from 'child_process'
+import { copyFiles } from './copyFiles'
+import { addDependencies } from './addDependencies'
+import { updatePackJsonScripts } from './updatePackJsonScripts'
+import { join } from 'path'
 
-const rootDir = file => join(process.cwd(), file)
-const enframeDir = file =>
+export const enframeDir = (file: string) =>
   join(join(process.cwd(), 'node_modules/enframe'), file)
+
+export const rootDir = (file: string) => join(process.cwd(), file)
 
 let packJson = require(rootDir('package.json'))
 
-const filesToCopy = [
-  'LICENSE',
-  'CODE_OF_CONDUCT.md',
-  'tsconfig.json',
-  '.prettierrc',
-  '.eslintrc.json'
-]
-
-const depsToInstall = ['typescript', 'ts-node', '@types/node', 'parcel']
-
-const devDepsToInstall = [
-  'prettier',
-  'eslint',
-  'eslint-config-prettier',
-  'eslint-plugin-prettier',
-  '@typescript-eslint/eslint-plugin',
-  '@typescript-eslint/parser'
-]
-
-const yarnAdd = (isDevDep, dep) => {
-  const command = `yarn add ${isDevDep ? '--dev' : ''} ${dep}`
-  logNextExec(command)
-  const stdout = execSync(command, { encoding: 'utf8' })
-  console.log(stdout)
-}
-
-const logNextExec = commandToExec => {
-  console.log(`Enframe is attempting to execute: ${commandToExec}\n`)
-}
-
-const logFileAdded = fileName => {
-  console.log(`Enframe has added or updated the file: ${fileName}.`)
-}
-
-const updatePackJsonScripts = () => {
-  delete require.cache[require.resolve(rootDir('package.json'))]
-  packJson = require(rootDir('package.json'))
-
-  let packJsonScripts
-
-  if (!!packJson.scripts) {
-    packJsonScripts = packJson.scripts
-  } else {
-    packJsonScripts = {}
-  }
-
-  packJsonScripts['build'] = 'parcel build src/front/index.html'
-  packJsonScripts['start'] = 'ts-node src/back/server.ts'
-
-  packJson.scripts = packJsonScripts
-
-  writeFileSync(
-    rootDir('package.json'),
-    `${JSON.stringify(packJson, null, 2)}\n`
-  )
+export const enframeExec = (command: string, stdioInherit?: boolean) => {
+  console.log(`Enframe is attempting to execute: ${command}\n`)
+  const execOptions = { encoding: 'utf8' }
+  if (stdioInherit) execOptions['stdio'] = 'inherit'
+  const stdout = execSync(command, execOptions)
+  if (stdout) console.log(stdout)
 }
 
 const makeSrc = () => {
@@ -73,44 +28,31 @@ const makeSrc = () => {
   // fs.writeFileSync(rootDir('src/front/index.html', 'i am html'))
 }
 
-const executeScript = () => {
+const gitInitIfNeeded = () => {
   if (!existsSync(rootDir('.git/'))) {
-    const command = 'git init'
-    logNextExec(command)
-    execSync(command, { encoding: 'utf8' })
+    enframeExec('git init')
   }
+}
 
+const yarnInitIfNeeded = () => {
   if (!packJson.name) {
-    const command = 'yarn init'
-    logNextExec(command)
-    execSync(command, {
-      encoding: 'utf8',
-      stdio: 'inherit'
-    })
+    enframeExec('yarn init', true)
   }
+}
 
+const createSrcIfNeeded = () => {
   if (!existsSync(rootDir('src/'))) {
     makeSrc()
   }
+}
 
-  filesToCopy.forEach(file => {
-    copyFileSync(enframeDir(file), rootDir(file))
-    logFileAdded(file)
-  })
+const executeScript = () => {
+  gitInitIfNeeded()
+  yarnInitIfNeeded()
+  createSrcIfNeeded()
 
-  copyFileSync(enframeDir('gitignore'), rootDir('.gitignore'))
-  logFileAdded('.gitignore')
-
-  depsToInstall.forEach(dep => {
-    const isDevDep = false
-    yarnAdd(isDevDep, dep)
-  })
-
-  devDepsToInstall.forEach(devDep => {
-    const isDevDep = true
-    yarnAdd(isDevDep, devDep)
-  })
-
+  copyFiles()
+  addDependencies()
   updatePackJsonScripts()
 }
 
