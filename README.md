@@ -1,9 +1,5 @@
 # Enframe
 
-## Current Problems
-
-1. `gitlab-ci.yml` needs to know the app name
-
 ## Remaining Features to Complete
 
 1. Service worker
