@@ -7,6 +7,7 @@ export const packJson = () => {
 
   scripts['build'] = 'parcel build src/front/index.html'
   scripts['start'] = 'ts-node src/back/server.ts'
+  scripts['test'] = 'mocha'
 
   packJson.scripts = scripts
 

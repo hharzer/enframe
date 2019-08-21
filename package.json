@@ -14,13 +14,32 @@
     "addEnv": "echo '#! /usr/bin/env node\n' | cat - bin/enframe.js > temp && mv temp bin/enframe.js",
     "makeExec": "chmod 755 bin/enframe.js",
     "build": "parcel build src/front/index.html",
-    "start": "ts-node src/back/server.ts"
+    "start": "ts-node src/back/server.ts",
+    "test": "mocha"
   },
   "devDependencies": {
+    "@types/chai": "^4.2.0",
+    "@types/chai-enzyme": "^0.6.7",
+    "@types/compression": "^1.0.1",
+    "@types/enzyme": "^3.10.3",
+    "@types/enzyme-adapter-react-16": "^1.0.5",
     "@types/express": "^4.17.1",
+    "@types/helmet": "^0.0.44",
+    "@types/mocha": "^5.2.7",
     "@types/node": "^12.7.2",
+    "@types/react": "^16.9.2",
+    "@types/react-dom": "^16.9.0",
+    "chai": "^4.2.0",
+    "chai-enzyme": "^1.0.0-beta.1",
+    "compression": "^1.7.4",
+    "enzyme": "^3.10.0",
+    "enzyme-adapter-react-16": "^1.14.0",
     "express": "^4.17.1",
+    "helmet": "^3.20.0",
+    "mocha": "^6.2.0",
     "parcel": "^1.12.3",
+    "react": "^16.9.0",
+    "react-dom": "^16.9.0",
     "ts-node": "^8.3.0",
     "typescript": "^3.5.3"
   }

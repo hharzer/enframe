@@ -7,7 +7,15 @@ const depsToInstall = [
   'parcel',
   'express',
   '@types/express',
-  'ts-node'
+  'ts-node',
+  'react',
+  '@types/react',
+  'react-dom',
+  '@types/react-dom',
+  'compression',
+  '@types/compression',
+  'helmet',
+  '@types/helmet'
 ]
 
 const devDepsToInstall = [
@@ -16,7 +24,17 @@ const devDepsToInstall = [
   'eslint-config-prettier',
   'eslint-plugin-prettier',
   '@typescript-eslint/eslint-plugin',
-  '@typescript-eslint/parser'
+  '@typescript-eslint/parser',
+  'mocha',
+  '@types/mocha',
+  'enzyme',
+  '@types/enzyme',
+  'chai',
+  '@types/chai',
+  'enzyme-adapter-react-16',
+  '@types/enzyme-adapter-react-16',
+  'chai-enzyme',
+  '@types/chai-enzyme'
 ]
 
 const yarnAdd = (isDevDep: boolean, dep: string) => {

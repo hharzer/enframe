@@ -6,7 +6,8 @@ const filesToCopy = [
   'CODE_OF_CONDUCT.md',
   'tsconfig.json',
   '.prettierrc',
-  '.eslintrc.json'
+  '.eslintrc.json',
+  '.mocharc.json'
 ]
 
 export const rootFiles = () => {
