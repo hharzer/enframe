@@ -1,5 +1,5 @@
 import { copyFileSync } from 'fs'
-import { enframeDir, rootDir } from './enframe';
+import { enframeDir, rootDir, logAdd } from './enframe';
 
 const filesToCopy = [
   'LICENSE',
@@ -9,16 +9,12 @@ const filesToCopy = [
   '.eslintrc.json'
 ]
 
-const logFileAdded = fileName => {
-  console.log(`Enframe has added or updated the file: ${fileName}.`)
-}
-
 export const copyFiles = () => {
   filesToCopy.forEach(file => {
     copyFileSync(enframeDir(file), rootDir(file))
-    logFileAdded(file)
+    logAdd(file)
   })
 
   copyFileSync(enframeDir('gitignore'), rootDir('.gitignore'))
-  logFileAdded('.gitignore')
+  logAdd('.gitignore')
 }

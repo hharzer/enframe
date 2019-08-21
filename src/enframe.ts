@@ -11,6 +11,10 @@ export const rootDir = (file: string) => join(process.cwd(), file)
 
 let packJson = require(rootDir('package.json'))
 
+export const logAdd = (name: string) => {
+  console.log(`Enframe has added or updated ${name}.`)
+}
+
 export const enframeExec = (command: string, stdioInherit?: boolean) => {
   console.log(`Enframe is attempting to execute: ${command}\n`)
   const execOptions = { encoding: 'utf8' }
@@ -20,9 +24,11 @@ export const enframeExec = (command: string, stdioInherit?: boolean) => {
 }
 
 const makeSrc = () => {
-  console.log('Enframe is adding the folders: src, src/back, and src/front')
-  mkdirSync(rootDir('src/back'), { recursive: true })
-  mkdirSync(rootDir('src/front'), { recursive: true })
+  ['src/back', 'src/front'].forEach(dir => {
+    mkdirSync(rootDir(dir), { recursive: true })
+    logAdd(dir)
+  })
+
   // fs.writeFileSync(rootDir('src/back/server.ts', 'i am a server'))
   // fs.writeFileSync(rootDir('src/front/index.html', 'i am html'))
 }
