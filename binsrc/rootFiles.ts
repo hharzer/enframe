@@ -9,7 +9,7 @@ const filesToCopy = [
   '.eslintrc.json'
 ]
 
-export const copyFiles = () => {
+export const rootFiles = () => {
   filesToCopy.forEach(file => {
     copyFileSync(enframeDir(file), rootDir(file))
     logAdd(file)

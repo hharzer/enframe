@@ -1,6 +1,14 @@
-import { enframeExec } from './enframe';
+import { enframeExec } from './enframe'
 
-const depsToInstall = ['typescript', 'ts-node', '@types/node', 'parcel']
+const depsToInstall = [
+  'typescript',
+  'ts-node',
+  '@types/node',
+  'parcel',
+  'express',
+  '@types/express',
+  'ts-node'
+]
 
 const devDepsToInstall = [
   'prettier',
@@ -15,7 +23,7 @@ const yarnAdd = (isDevDep: boolean, dep: string) => {
   enframeExec(`yarn add ${isDevDep ? '--dev' : ''} ${dep}`)
 }
 
-export const addDependencies = () => {
+export const dependencies = () => {
   depsToInstall.forEach(dep => {
     const isDevDep = false
     yarnAdd(isDevDep, dep)
