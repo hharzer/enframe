@@ -1,6 +1,6 @@
 {
   "name": "enframe",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "bin": "./bin/enframe.js",
   "description": "Enframe facilitates rapid application creation and continued maintainance.",
   "repository": "git@github.com:aegatlin/binlink.git",
