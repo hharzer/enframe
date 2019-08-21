@@ -5,9 +5,8 @@ import { addDependencies } from './addDependencies'
 import { updatePackJsonScripts } from './updatePackJsonScripts'
 import { join } from 'path'
 
-export const enframeDir = (file: string) =>
-  join(join(process.cwd(), 'node_modules/enframe'), file)
-
+const enframePath = join(process.cwd(), 'node_modules/enframe')
+export const enframeDir = (file: string) => join(enframePath, file)
 export const rootDir = (file: string) => join(process.cwd(), file)
 
 let packJson = require(rootDir('package.json'))
@@ -28,28 +27,13 @@ const makeSrc = () => {
   // fs.writeFileSync(rootDir('src/front/index.html', 'i am html'))
 }
 
-const gitInitIfNeeded = () => {
-  if (!existsSync(rootDir('.git/'))) {
-    enframeExec('git init')
-  }
-}
-
-const yarnInitIfNeeded = () => {
-  if (!packJson.name) {
-    enframeExec('yarn init', true)
-  }
-}
-
-const createSrcIfNeeded = () => {
-  if (!existsSync(rootDir('src/'))) {
-    makeSrc()
-  }
-}
-
+const isGitInit = existsSync(rootDir('.git/'))
+const isYarnInit = packJson.name
+const isSrc = existsSync(rootDir('src/'))
 const executeScript = () => {
-  gitInitIfNeeded()
-  yarnInitIfNeeded()
-  createSrcIfNeeded()
+  if (!isGitInit) enframeExec('git init')
+  if (!isYarnInit) enframeExec('yarn init', true)
+  if (!isSrc) makeSrc()
 
   copyFiles()
   addDependencies()
