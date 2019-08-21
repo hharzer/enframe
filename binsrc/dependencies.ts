@@ -38,18 +38,7 @@ const devDepsToInstall = [
   'cypress'
 ]
 
-const yarnAdd = (isDevDep: boolean, dep: string) => {
-  enframeExec(`yarn add ${isDevDep ? '--dev' : ''} ${dep}`)
-}
-
 export const dependencies = () => {
-  depsToInstall.forEach(dep => {
-    const isDevDep = false
-    yarnAdd(isDevDep, dep)
-  })
-
-  devDepsToInstall.forEach(devDep => {
-    const isDevDep = true
-    yarnAdd(isDevDep, devDep)
-  })
+  enframeExec(`yarn add ${depsToInstall.join(' ')}`)
+  enframeExec(`yarn add --dev ${devDepsToInstall.join(' ')}`)
 }

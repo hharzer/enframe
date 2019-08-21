@@ -17,6 +17,7 @@ import { dependencies } from './dependencies'
 import { packJson } from './packJson'
 import { srcFiles } from './srcFiles'
 import { git } from './git'
+import { heroku } from './heroku';
 
 export const logAdd = (name: string) => {
   console.log(`Enframe has added or updated ${name}`)
@@ -36,8 +37,9 @@ const enframe = () => {
   rootFiles()
   srcFiles()
   dependencies()
-  git()
   packJson()
+  heroku()
+  git()
 }
 
 enframe()
