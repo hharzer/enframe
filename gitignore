@@ -5,3 +5,7 @@ yarn-error.log
 # from parcel
 dist
 .cache
+
+# from cypress
+cypress/videos
+cypress/screenshots

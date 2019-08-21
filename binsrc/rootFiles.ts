@@ -9,7 +9,8 @@ export const rootFiles = () => {
     'tsconfig.json',
     '.prettierrc',
     '.eslintrc.json',
-    '.mocharc.json'
+    '.mocharc.json',
+    'cypress.json'
   ]
 
   filesToCopy.forEach(file => {
