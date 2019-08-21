@@ -15,7 +15,8 @@
     "makeExec": "chmod 755 bin/enframe.js",
     "build": "parcel build src/front/index.html",
     "start": "ts-node src/back/server.ts",
-    "test": "mocha"
+    "test": "mocha",
+    "watch": "nodemon --watch binsrc/ --ext ts --exec yarn compile"
   },
   "devDependencies": {
     "@types/chai": "^4.2.0",
@@ -37,6 +38,7 @@
     "express": "^4.17.1",
     "helmet": "^3.20.0",
     "mocha": "^6.2.0",
+    "nodemon": "^1.19.1",
     "parcel": "^1.12.3",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",

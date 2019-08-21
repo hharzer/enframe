@@ -34,7 +34,8 @@ const devDepsToInstall = [
   'enzyme-adapter-react-16',
   '@types/enzyme-adapter-react-16',
   'chai-enzyme',
-  '@types/chai-enzyme'
+  '@types/chai-enzyme',
+  'cypress'
 ]
 
 const yarnAdd = (isDevDep: boolean, dep: string) => {
