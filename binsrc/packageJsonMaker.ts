@@ -62,7 +62,7 @@ const DEV_DEPENDENCIES = [
 ]
 
 const addDeps = (packageJson: Package.Json, deps: string[], key: Package.Key) => {
-  const packageDeps = Object.keys(packageJson[key])
+  const packageDeps = Object.keys(packageJson[key] || {})
   const depsToAdd: string[] = packageDeps ? deps.filter(dep => !packageDeps.includes(dep)) : deps
 
   if (!depsToAdd.length) {
