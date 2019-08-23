@@ -4,20 +4,11 @@ const enframePath = join(process.cwd(), 'node_modules/enframe')
 export const enframeDir = (file: string) => join(enframePath, file)
 export const rootDir = (file: string) => join(process.cwd(), file)
 
-interface EnframeConfig {
-  appName: string
-  gitlabRemoteSSH: string
-}
-
-export const enframeConfig: EnframeConfig = require(rootDir('enframe.json'))
-
 import { execSync } from 'child_process'
-import { rootFiles } from './rootFiles'
-import { dependencies } from './dependencies'
-import { packJson } from './packJson'
-import { srcFiles } from './srcFiles'
-import { git } from './git'
-import { heroku } from './heroku';
+import { packageJsonMaker } from './packageJsonMaker'
+import { gitPush, gitInit } from './git'
+import { herokuMaker } from './herokuMaker'
+import { fileMaker } from './fileMaker'
 
 export const logAdd = (name: string) => {
   console.log(`Enframe has added or updated ${name}`)
@@ -31,15 +22,28 @@ export const enframeExec = (command: string, stdioInherit?: boolean) => {
   if (stdout) console.log(stdout)
 }
 
+export const commandDoesNotError = (command: string): boolean => {
+  try {
+    execSync(command, { encoding: 'utf8', stdio: 'ignore' })
+    return true
+  } catch {
+    return false
+  }
+}
+
+
+const yarnExists = (): boolean => {
+  const stdout = execSync('cat package.json', { encoding: 'utf8' })
+  return stdout.includes('"name":')
+}
+
 const enframe = () => {
-  enframeExec('git init')
-  enframeExec('yarn init', true)
-  rootFiles()
-  srcFiles()
-  dependencies()
-  packJson()
-  heroku()
-  git()
+  gitInit()
+  if (!yarnExists()) enframeExec('yarn init', true)
+  fileMaker()
+  packageJsonMaker()
+  herokuMaker()
+  gitPush()
 }
 
 enframe()

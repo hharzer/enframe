@@ -1,19 +1,25 @@
-import { enframeExec, enframeConfig } from './enframe'
+import { enframeExec, commandDoesNotError } from './enframe'
 import { execSync } from 'child_process'
+import { enframeConfig } from './enframeConfig'
 
 const { gitlabRemoteSSH } = enframeConfig
 
-export const git = () => {
-  const isOriginSet = () => {
-    const stdout = execSync('git remote', { encoding: 'utf8' })
-    return stdout.includes('origin')
-  }
+const gitExists = (): boolean => commandDoesNotError('git status')
+const gitEmptyPorcelain = (): boolean => {
+  return !execSync('git status --porcelain', { encoding: 'utf8' })
+}
+const gitChanges = (): boolean => gitExists() && gitEmptyPorcelain()
 
-  const gitChanges = (): boolean => {
-    const stdout = execSync('git status --porcelain', { encoding: 'utf8' })
-    return !!stdout
-  }
+export const gitInit = () => {
+  if (!gitExists()) enframeExec('git init')
+}
 
+const isOriginSet = () => {
+  const gitRemotes = execSync('git remote', { encoding: 'utf8' })
+  return gitRemotes.includes('origin')
+}
+
+export const gitPush = () => {
   if (!gitChanges()) return
 
   enframeExec('git add .')
