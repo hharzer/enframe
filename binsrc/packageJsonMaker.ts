@@ -71,7 +71,7 @@ const addDeps = (packageJson: Package.Json, deps: string[], key: Package.Key) =>
   }
 
   const isDev = key == Package.Key.DevDependencies
-  const command = `yarn add ${isDev ? '--dev' : ''}${depsToAdd}`
+  const command = `yarn add ${isDev ? '--dev' : ''}${depsToAdd.join(' ')}`
   enframeExec(command)
 }
 
