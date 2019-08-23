@@ -4,6 +4,7 @@
 
 1. Ensure idempotency
 
+1. Git status detection is wrong.
 1. lint
 1. Service worker
 1. deploy to app stores?

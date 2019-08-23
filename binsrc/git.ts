@@ -20,7 +20,10 @@ const isOriginSet = () => {
 }
 
 export const gitPush = () => {
-  if (!gitChanges()) return
+  if (!gitChanges()) {
+    console.log('No git changes have been detected. Skipping Enframe git push sequence.')
+    return
+  }
 
   enframeExec('git add .')
   enframeExec('git commit -m "Enframe commit."')

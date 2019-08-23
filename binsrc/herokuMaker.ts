@@ -7,7 +7,7 @@ export const herokuMaker = () => {
   const herokuExists = () => commandDoesNotError('heroku')
   if (!herokuExists) {
     console.log(
-      'You do not have the Heroku CLI installed. Skipping Heroku App creation.\n'
+      'You do not have the Heroku CLI installed. Skipping Enframe Heroku App creation sequence.\n'
     )
   }
 
