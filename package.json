@@ -16,7 +16,7 @@
     "build": "parcel build src/front/index.html",
     "start": "ts-node src/back/server.ts",
     "test": "mocha",
-    "watch": "onchange -k 'binsrc/**' -- yarn compile"
+    "watch": "onchange -ik 'binsrc/**' -- yarn compile"
   },
   "devDependencies": {
     "@types/chai": "^4.2.0",

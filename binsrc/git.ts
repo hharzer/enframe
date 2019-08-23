@@ -1,17 +1,20 @@
-import { enframeExec, commandDoesNotError } from './enframe'
+import { enframeExec, commandDoesNotError, elog } from './enframe'
 import { execSync } from 'child_process'
 import { enframeConfig } from './enframeConfig'
 
 const { gitlabRemoteSSH } = enframeConfig
 
 const gitExists = (): boolean => commandDoesNotError('git status')
-const gitEmptyPorcelain = (): boolean => {
-  return !execSync('git status --porcelain', { encoding: 'utf8' })
-}
-const gitChanges = (): boolean => gitExists() && gitEmptyPorcelain()
 
 export const gitInit = () => {
   if (!gitExists()) enframeExec('git init')
+}
+
+const gitChanges = (): boolean => {
+  if (!gitExists()) return false
+
+  const changeSet = execSync('git status --porcelain', { encoding: 'utf8' })
+  return !!changeSet
 }
 
 const isOriginSet = () => {
@@ -21,7 +24,7 @@ const isOriginSet = () => {
 
 export const gitPush = () => {
   if (!gitChanges()) {
-    console.log('No git changes have been detected. Skipping Enframe git push sequence.')
+    elog('No git changes have been detected. Skipping git-push sequence.')
     return
   }
 

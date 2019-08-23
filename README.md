@@ -4,8 +4,8 @@
 
 1. Ensure idempotency
 
-1. Git status detection is wrong.
 1. lint
+1. palantir/tslint-react
 1. Service worker
 1. deploy to app stores?
 1. Investigate post-heroku deploy steps. I.e., automated custom domain setup via heroku CLI? Automated domain registration (far-fetched)?

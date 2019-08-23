@@ -5,13 +5,15 @@ import {
   mkdirSync,
   readFileSync
 } from 'fs'
-import { enframeDir, rootDir, logAdd } from './enframe'
+import { enframeDir, rootDir, elog } from './enframe'
 import { enframeConfig } from './enframeConfig';
+
+const logTouch = (name: string) => elog(`touched ${name}`)
 
 const makeFiles = (files: string[]) => {
   files.forEach(file => {
     copyFileSync(enframeDir(file), rootDir(file))
-    logAdd(file)
+    logTouch(file)
   })
 }
 
@@ -36,15 +38,15 @@ const rootFileMaker = () => {
   makeFiles(files)
 
   copyFileSync(enframeDir('gitignore'), rootDir('.gitignore'))
-  logAdd('.gitignore')
+  logTouch('.gitignore')
 
   writeFileSync(rootDir('.gitlab-ci.yml'), generateGitlabCiYmlFile())
-  logAdd('.gitlab-ci.yml')
+  logTouch('.gitlab-ci.yml')
 }
 
 const makeBackDir = () => {
   mkdirSync(rootDir('src/back'), { recursive: true })
-  logAdd('src/back')
+  logTouch('src/back')
 }
 
 const makeBackFiles = () => {
@@ -55,7 +57,7 @@ const makeBackFiles = () => {
 
 const makeFrontDir = () => {
   mkdirSync(rootDir('src/front'), { recursive: true })
-  logAdd('src/front')
+  logTouch('src/front')
 }
 
 const makeFrontFiles = () => {

@@ -10,12 +10,8 @@ import { gitPush, gitInit } from './git'
 import { herokuMaker } from './herokuMaker'
 import { fileMaker } from './fileMaker'
 
-export const logAdd = (name: string) => {
-  console.log(`Enframe has added or updated ${name}`)
-}
-
 export const enframeExec = (command: string, stdioInherit?: boolean) => {
-  console.log(`Enframe is executing: ${command}\n`)
+  elog(`Executing: ${command}\n`)
   const execOptions = { encoding: 'utf8' }
   if (stdioInherit) execOptions['stdio'] = 'inherit'
   const stdout = execSync(command, execOptions)
@@ -31,6 +27,9 @@ export const commandDoesNotError = (command: string): boolean => {
   }
 }
 
+export const elog = (message: string) => {
+  console.log(`Enframe: ${message}`)
+}
 
 const yarnExists = (): boolean => {
   const stdout = execSync('cat package.json', { encoding: 'utf8' })
@@ -44,6 +43,8 @@ const enframe = () => {
   packageJsonMaker()
   herokuMaker()
   gitPush()
+
+  elog("You've been framed! Have a nice day :)")
 }
 
 enframe()

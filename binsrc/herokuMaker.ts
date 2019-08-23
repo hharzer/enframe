@@ -1,19 +1,31 @@
-import { enframeExec, commandDoesNotError } from './enframe'
+import { enframeExec, commandDoesNotError, elog } from './enframe'
 import { enframeConfig } from './enframeConfig'
 
 const { appName } = enframeConfig
 
+const createIfCan = (appName: string) => {
+  const appExists: boolean = commandDoesNotError(`heroku apps:info ${appName}`)
+  if (appExists) {
+    elog(`Heroku app ${appName} already exists.`)
+    return
+  }
+
+  try {
+    enframeExec(`heroku apps:create ${appName}`)
+  } catch (e) {
+    elog('Heroku app creation failed. Skipping for now. Error message below.')
+    elog(e)
+  }
+}
+
 export const herokuMaker = () => {
   const herokuExists = () => commandDoesNotError('heroku')
   if (!herokuExists) {
-    console.log(
-      'You do not have the Heroku CLI installed. Skipping Enframe Heroku App creation sequence.\n'
-    )
+    const message =
+      'You do not have the Heroku CLI installed. Skipping Heroku app-creation sequence.'
+    elog(message)
   }
 
-  const stagingExists = commandDoesNotError(`heroku apps:info ${appName}-staging`)
-  if (!stagingExists) enframeExec(`heroku apps:create ${appName}-staging`)
-
-  const prodExists = commandDoesNotError(`heroku apps:info ${appName}-prod`)
-  if (!prodExists) enframeExec(`heroku apps:create ${appName}-prod`)
+  createIfCan(`${appName}-staging`)
+  createIfCan(`${appName}-prod`)
 }
