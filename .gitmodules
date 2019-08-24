@@ -1,0 +1,3 @@
+[submodule "enframe-test-app"]
+	path = enframe-test-app
+	url = git@gitlab.com:aegatlin/enframe-test-app.git
