@@ -16,7 +16,10 @@
     "build": "parcel build src/front/index.html",
     "start": "ts-node src/back/server.ts",
     "test": "mocha",
-    "watch": "onchange -ik 'binsrc/**' -- yarn compile"
+    "watch": "onchange -ik 'binsrc/**' -- yarn compile",
+    "test-app-reset": "./test-app-reset.sh",
+    "test-app-link": "cd enframe-test-app && yarn && yarn link enframe",
+    "test-app": "yarn test-app-reset && yarn test-app-link && cd enframe-test-app && yarn enframe"
   },
   "devDependencies": {
     "@types/chai": "^4.2.0",
