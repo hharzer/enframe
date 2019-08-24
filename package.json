@@ -18,8 +18,10 @@
     "test": "mocha",
     "watch": "onchange -ik 'binsrc/**' -- yarn compile",
     "test-app-reset": "./test-app-reset.sh",
+    "tar": "yarn test-app-reset",
     "test-app-link": "cd enframe-test-app && yarn && yarn link enframe",
-    "test-app": "yarn test-app-reset && yarn test-app-link && cd enframe-test-app && yarn enframe"
+    "test-app": "yarn test-app-reset && yarn test-app-link && cd enframe-test-app && yarn enframe",
+    "tap": "yarn test-app"
   },
   "devDependencies": {
     "@types/chai": "^4.2.0",
