@@ -61,42 +61,44 @@ const DEV_DEPENDENCIES = [
   'onchange'
 ]
 
-const addDeps = (packageJson: Package.Json, deps: string[], key: Package.Key) => {
-  const packageDeps = Object.keys(packageJson[key] || {})
-  const depsToAdd: string[] = packageDeps ? deps.filter(dep => !packageDeps.includes(dep)) : deps
+const addDeps = (deps: string[], key: Package.Key) => {
+  const depsToAdd = deps
+  // const packageDeps = Object.keys(packageJson[key] || {})
+  // const depsToAdd: string[] = packageDeps ? deps.filter(dep => !packageDeps.includes(dep)) : deps
 
-  if (!depsToAdd.length) {
-    elog(`${key} are up to date.`)
-    return
-  }
+  // if (!depsToAdd.length) {
+  //   elog(`${key} are up to date.`)
+  //   return
+  // }
 
   const isDev = key == Package.Key.DevDependencies
   const command = `yarn add ${isDev ? '--dev ' : ''}${depsToAdd.join(' ')}`
   enframeExec(command)
 }
 
-const dependenciesMaker = (packageJson: Package.Json) => {
-  addDeps(packageJson, DEPENDENCIES, Package.Key.Dependencies)
-  addDeps(packageJson, DEV_DEPENDENCIES, Package.Key.DevDependencies)
+const dependenciesMaker = () => {
+  addDeps(DEPENDENCIES, Package.Key.Dependencies)
+  addDeps(DEV_DEPENDENCIES, Package.Key.DevDependencies)
 }
 
-const scriptsMaker = (oldPackageJson: Package.Json): Package.Json => {
-  const scripts = oldPackageJson.scripts ? oldPackageJson.scripts : {}
+const scriptsMaker = (scripts: Package.Json[Package.Key.Scripts]): Package.Json[Package.Key.Scripts] => {
+  const enframeScripts = {
+    build: 'parcel build src/front/index.html',
+    start: 'ts-node src/back/server.ts',
+    test: 'mocha',
+    cy: 'yarn cypress open',
+    watch: "onchange 'src/**' -- yarn build && yarn start"
+  }
 
-  scripts['build'] = 'parcel build src/front/index.html'
-  scripts['start'] = 'ts-node src/back/server.ts'
-  scripts['test'] = 'mocha'
-  scripts['cy'] = 'yarn cypress open'
-  scripts['watch'] = "onchange 'src/**' -- yarn build && yarn start"
-
-  return { ...oldPackageJson, scripts }
+  const newScripts = scripts ? { ...scripts, ...enframeScripts } : enframeScripts
+  return newScripts
 }
 
 export const packageJsonMaker = () => {
-  const oldPackageJson = require(rootDir('package.json'))
+  dependenciesMaker()
+  // delete require.cache[require.resolve(rootDir('./package.json'))]
+  const packageJson: Package.Json = require(rootDir('./package.json'))
+  packageJson[Package.Key.Scripts] = scriptsMaker(packageJson[Package.Key.Scripts])
 
-  dependenciesMaker(oldPackageJson)
-  const newPackageJson = scriptsMaker(oldPackageJson)
-
-  writeFileSync(rootDir('package.json'), `${JSON.stringify(newPackageJson, null, 2)}\n`)
+  writeFileSync(rootDir('package.json'), `${JSON.stringify(packageJson, null, 2)}\n`)
 }
