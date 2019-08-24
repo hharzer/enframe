@@ -43,7 +43,6 @@ const enframe = () => {
   packageJsonMaker()
   herokuMaker()
   gitPush()
-
   elog("You've been framed! Have a nice day :)")
 }
 

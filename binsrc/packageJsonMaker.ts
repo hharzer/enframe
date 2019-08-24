@@ -1,5 +1,6 @@
 import { writeFileSync } from 'fs'
 import { rootDir, enframeExec, elog } from './enframe'
+import importFresh from 'import-fresh'
 
 namespace Package {
   export enum Key {
@@ -61,27 +62,30 @@ const DEV_DEPENDENCIES = [
   'onchange'
 ]
 
-const addDeps = (deps: string[], key: Package.Key) => {
-  const depsToAdd = deps
-  // const packageDeps = Object.keys(packageJson[key] || {})
-  // const depsToAdd: string[] = packageDeps ? deps.filter(dep => !packageDeps.includes(dep)) : deps
+const addDeps = (deps: string[], key: Package.Key, packageJson) => {
+  const packageDeps = Object.keys(packageJson[key] || {})
+  const depsToAdd: string[] = packageDeps
+    ? deps.filter(dep => !packageDeps.includes(dep))
+    : deps
 
-  // if (!depsToAdd.length) {
-  //   elog(`${key} are up to date.`)
-  //   return
-  // }
+  if (!depsToAdd.length) {
+    elog(`${key} are up to date.`)
+    return
+  }
 
   const isDev = key == Package.Key.DevDependencies
   const command = `yarn add ${isDev ? '--dev ' : ''}${depsToAdd.join(' ')}`
   enframeExec(command)
 }
 
-const dependenciesMaker = () => {
-  addDeps(DEPENDENCIES, Package.Key.Dependencies)
-  addDeps(DEV_DEPENDENCIES, Package.Key.DevDependencies)
+const dependenciesMaker = (packageJson: Package.Json) => {
+  addDeps(DEPENDENCIES, Package.Key.Dependencies, packageJson)
+  addDeps(DEV_DEPENDENCIES, Package.Key.DevDependencies, packageJson)
 }
 
-const scriptsMaker = (scripts: Package.Json[Package.Key.Scripts]): Package.Json[Package.Key.Scripts] => {
+const scriptsMaker = (
+  scripts: Package.Json[Package.Key.Scripts]
+): Package.Json[Package.Key.Scripts] => {
   const enframeScripts = {
     build: 'parcel build src/front/index.html',
     start: 'ts-node src/back/server.ts',
@@ -94,11 +98,16 @@ const scriptsMaker = (scripts: Package.Json[Package.Key.Scripts]): Package.Json[
   return newScripts
 }
 
+const getPackageJson = (): Package.Json => {
+  return importFresh(rootDir('package.json')) as Package.Json
+}
+
 export const packageJsonMaker = () => {
-  dependenciesMaker()
-  // delete require.cache[require.resolve(rootDir('./package.json'))]
-  const packageJson: Package.Json = require(rootDir('./package.json'))
-  packageJson[Package.Key.Scripts] = scriptsMaker(packageJson[Package.Key.Scripts])
+  dependenciesMaker(getPackageJson())
+
+  const packageJson = getPackageJson()
+  const newScripts = packageJson[Package.Key.Scripts]
+  packageJson[Package.Key.Scripts] = scriptsMaker(newScripts)
 
   writeFileSync(rootDir('package.json'), `${JSON.stringify(packageJson, null, 2)}\n`)
 }
