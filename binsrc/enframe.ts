@@ -4,10 +4,10 @@ const enframePath = join(process.cwd(), 'node_modules/enframe')
 export const enframeDir = (file: string) => join(enframePath, file)
 export const rootDir = (file: string) => join(process.cwd(), file)
 
-import { execSync } from 'child_process'
+import { execSync, exec } from 'child_process'
 import { packageJsonMaker } from './packageJsonMaker'
 import { gitPush, gitInit } from './git'
-import { herokuMaker } from './herokuMaker'
+import { herokuMaker, herokuChecker } from './herokuMaker'
 import { fileMaker } from './fileMaker'
 
 export const enframeExec = (command: string, stdioInherit?: boolean) => {
@@ -27,6 +27,15 @@ export const commandDoesNotError = (command: string): boolean => {
   }
 }
 
+export const commandDoesNotErrorAsync = async (command: string): Promise<boolean> => {
+  try {
+    await exec(command)
+    return true
+  } catch {
+    return false
+  }
+}
+
 export const elog = (message: string) => {
   console.log(`Enframe: ${message}`)
 }
@@ -36,12 +45,13 @@ const yarnExists = (): boolean => {
   return stdout.includes('"name":')
 }
 
-const enframe = () => {
+const enframe = async () => {
+  const herokuStatusPromise = herokuChecker()
   gitInit()
   if (!yarnExists()) enframeExec('yarn init', true)
   fileMaker()
   packageJsonMaker()
-  herokuMaker()
+  herokuMaker(await herokuStatusPromise)
   gitPush()
   elog("You've been framed! Have a nice day :)")
 }

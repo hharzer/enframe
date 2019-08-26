@@ -1,31 +1,50 @@
-import { enframeExec, commandDoesNotError, elog } from './enframe'
+import {
+  enframeExec,
+  commandDoesNotError,
+  elog,
+  commandDoesNotErrorAsync
+} from './enframe'
 import { enframeConfig } from './enframeConfig'
 
 const { appName } = enframeConfig
+const stagingName = `${appName}-staging`
+const prodName = `${appName}-prod`
 
-const createIfCan = (appName: string) => {
-  const appExists: boolean = commandDoesNotError(`heroku apps:info ${appName}`)
-  if (appExists) {
-    elog(`Heroku app ${appName} already exists.`)
-    return
-  }
+const appExists = (app: string): Promise<boolean> => {
+  return commandDoesNotErrorAsync(`heroku apps:info ${app}`)
+}
 
+interface HerokuStatus {
+  isHeroku: boolean
+  isStaging: boolean
+  isProd: boolean
+  shouldRunHerokuMaker: boolean
+}
+export const herokuChecker = async (): Promise<HerokuStatus> => {
+  const isHeroku = await commandDoesNotErrorAsync('heroku')
+  const herokuPromises = [appExists(stagingName), appExists(prodName)]
+  const [isStaging, isProd] = await Promise.all(herokuPromises)
+
+  const shouldRunHerokuMaker = isHeroku && !isStaging && !isProd
+  return { isHeroku, isStaging, isProd, shouldRunHerokuMaker }
+}
+
+const create = (app: string) => {
   try {
-    enframeExec(`heroku apps:create ${appName}`)
+    enframeExec(`heroku apps:create ${app}`)
   } catch (e) {
-    elog('Heroku app creation failed. Skipping for now. Error message below.')
+    elog(`Failed to create app ${app}`)
     elog(e)
   }
 }
 
-export const herokuMaker = () => {
-  const herokuExists = () => commandDoesNotError('heroku')
-  if (!herokuExists) {
-    const message =
-      'You do not have the Heroku CLI installed. Skipping Heroku app-creation sequence.'
+export const herokuMaker = ({ isHeroku, shouldRunHerokuMaker }: HerokuStatus) => {
+  if (!shouldRunHerokuMaker) {
+    const error = isHeroku ? 'Cannot create Heroku apps' : 'Heroku CLI is not installed'
+    const message = `${error}. Skipping app creation.`
     elog(message)
   }
 
-  createIfCan(`${appName}-staging`)
-  createIfCan(`${appName}-prod`)
+  create(stagingName)
+  create(prodName)
 }
