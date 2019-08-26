@@ -54,6 +54,7 @@ const enframe = async () => {
   herokuMaker(await herokuStatusPromise)
   gitPush()
   elog("You've been framed! Have a nice day :)")
+  process.exit()
 }
 
 enframe()

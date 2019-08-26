@@ -1,9 +1,4 @@
-import {
-  enframeExec,
-  commandDoesNotError,
-  elog,
-  commandDoesNotErrorAsync
-} from './enframe'
+import { enframeExec, elog, commandDoesNotErrorAsync } from './enframe'
 import { enframeConfig } from './enframeConfig'
 
 const { appName } = enframeConfig
@@ -40,9 +35,8 @@ const create = (app: string) => {
 
 export const herokuMaker = ({ isHeroku, shouldRunHerokuMaker }: HerokuStatus) => {
   if (!shouldRunHerokuMaker) {
-    const error = isHeroku ? 'Cannot create Heroku apps' : 'Heroku CLI is not installed'
-    const message = `${error}. Skipping app creation.`
-    elog(message)
+    elog('Skipping Heroku app creation.')
+    return
   }
 
   create(stagingName)
