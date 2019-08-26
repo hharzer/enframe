@@ -91,7 +91,8 @@ const scriptsMaker = (
     start: 'ts-node src/back/server.ts',
     test: 'mocha',
     cy: 'yarn cypress open',
-    watch: "onchange 'src/**' -- yarn build && yarn start"
+    watch: "onchange 'src/**' -- yarn build && yarn start",
+    lint: 'eslint src/'
   }
 
   const newScripts = scripts ? { ...scripts, ...enframeScripts } : enframeScripts
