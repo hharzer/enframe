@@ -1,13 +1,11 @@
 # Enframe
 
-## Tasks until v1
+## Principles
 
-### Keep in Mind
+1. Idempotent
+1. Quick (re)execution
 
-1. Ensure idempotency
-1. Ensure quick reruns
-
-### List
+## Todos until v1
 
 1. lint
 1. palantir/tslint-react?

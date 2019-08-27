@@ -1,7 +1,7 @@
 import express from 'express'
 import path from 'path'
-import compression = require('compression');
-import helmet = require('helmet');
+import compression = require('compression')
+import helmet = require('helmet')
 
 const PORT = process.env.PORT || '3000'
 
