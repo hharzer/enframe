@@ -7,15 +7,13 @@
 
 ## Todos until v1
 
-1. lint
-1. palantir/tslint-react?
 1. Service worker
-1. deploy to app stores?
-1. Investigate post-heroku deploy steps. I.e., automated custom domain setup via heroku CLI? Automated domain registration (far-fetched)?
-1. Programmatic index.html generation?
 1. introduce psql
 1. introduce Redux
 1. introduce integration tests
+1. deploy to app stores?
+1. Investigate post-heroku deploy steps. I.e., automated custom domain setup via heroku CLI? Automated domain registration (far-fetched)?
+1. Programmatic index.html generation?
 
 ## Before enframing
 
