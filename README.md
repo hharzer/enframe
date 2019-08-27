@@ -1,6 +1,8 @@
 # Enframe
 
-## Principles
+You focus on `src/`, enframe will take care of the rest.
+
+## Script Principles
 
 1. Idempotent
 1. Quick (re)execution
@@ -27,6 +29,8 @@
 
 ## Usage
 
+### From Scratch
+
 1. Create a directory.
 
     ```bash
@@ -49,6 +53,15 @@
     yarn add --dev enframe
     yarn enframe
     ```
+
+### To Maintain
+
+```bash
+yarn upgrade enframe
+yarn enframe
+```
+
+A useful aspect of enframe is the ability to no longer worry about application infrastructure. It will take care of it for you while you simply focus of `src/`.
 
 ## Notes
 
