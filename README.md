@@ -20,10 +20,14 @@
 
 * Ensure you have stored your Gitlab SSH key on your dev machine.
 * Ensure you have the Heroku CLI on your dev machine.
+* Ensure you have your `HEROKU_API_KEY` stored in Gitlab.
+  * You can find your Heroku API key on your Heroku User Settings page online.
+  * Copy your Heroku API key into Gitlab in `Settings -> CICD -> Variables`.
+  * The deploy step of the gitlab pipeline will fail until you set this key.
 
-## Steps
+## Usage
 
-1. Create a new app.
+1. Create a directory.
 
     ```bash
     mkdir new-app
@@ -48,5 +52,6 @@
 
 ## Notes
 
-* A `$HEROKU_API_KEY` needs to be stored in your Gitlab project in order for your `gitlab-ci.yml` file to deploy to Heroku successfully. It is in Heroku User Settings. Copy it into Gitlab under `Settings -> CICD -> Variables`. Until you do this, the deploy steps will fail.
-* The Gitlab project does not need to exist before you set it as an upstream. Gitlab can create the project for you on first push.
+* The Gitlab repository does not need to exist before you set it as an upstream. If the repository does not already exist, Gitlab will create the project for you on first push.
+
+* The app name you choose will need to be unique on Heroku. For example, the above app name, `new-app`, will try to create two new application on Heroku, `new-app-staging` and `new-app-prod`. If those heroku app names are taken, you will not be able to make them.
