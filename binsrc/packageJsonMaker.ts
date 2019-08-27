@@ -46,6 +46,7 @@ const DEV_DEPENDENCIES = [
   'eslint',
   'eslint-config-prettier',
   'eslint-plugin-prettier',
+  'eslint-plugin-react',
   '@typescript-eslint/eslint-plugin',
   '@typescript-eslint/parser',
   'mocha',
@@ -92,7 +93,7 @@ const scriptsMaker = (
     test: 'mocha',
     cy: 'yarn cypress open',
     watch: "onchange 'src/**' -- yarn build && yarn start",
-    lint: 'eslint --ext .ts,.tsx src/'
+    lint: 'eslint --ext .ts,.tsx ./'
   }
 
   const newScripts = scripts ? { ...scripts, ...enframeScripts } : enframeScripts
