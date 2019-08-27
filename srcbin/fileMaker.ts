@@ -74,6 +74,7 @@ const srcFileMaker = () => {
       'App.tsx',
       'index.html',
       'index.tsx',
+      'service-worker.js',
       'stylesheet.css'
     ]
     makeFiles(frontFiles.map(file => `src/front/${file}`))
