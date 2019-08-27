@@ -18,7 +18,8 @@ const rootFileMaker = () => {
     'cypress.json': 'cypress.json',
     gitignore: '.gitignore',
     LICENSE: 'LICENSE',
-    'tsconfig.json': 'tsconfig.json'
+    'tsconfig.json': 'tsconfig.json',
+    'nodemon.json': 'nodemon.json'
   }
 
   interface RootFileWriteData {
@@ -29,10 +30,10 @@ const rootFileMaker = () => {
   }
 
   const rootFileWriteData: RootFileWriteData = {
-    'gitlab-ci.yml': {
+    '.gitlab-ci.yml': {
       fileName: '.gitlab-ci.yml',
       fileGenerater: () => {
-        const ci = readFileSync(efRootDir('gitlab-ci.yml'), 'utf8')
+        const ci = readFileSync(efRootDir('.gitlab-ci.yml'), 'utf8')
         const newCi = ci.replace(/ENFRAME_APP_NAME/g, appName)
         return newCi
       }
@@ -45,7 +46,7 @@ const rootFileMaker = () => {
   })
 
   Object.entries(rootFileWriteData).forEach(([, writer]) => {
-    writeFileSync(efRootDir(writer.fileName), writer.fileGenerater())
+    writeFileSync(rootDir(writer.fileName), writer.fileGenerater())
     logTouch(writer.fileName)
   })
 }

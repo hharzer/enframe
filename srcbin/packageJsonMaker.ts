@@ -60,54 +60,51 @@ const DEV_DEPENDENCIES = [
   'chai-enzyme',
   '@types/chai-enzyme',
   'cypress',
-  'onchange'
+  'nodemon'
 ]
 
-const addDeps = (deps: string[], key: Package.Key, packageJson) => {
-  const packageDeps = Object.keys(packageJson[key] || {})
-  const depsToAdd: string[] = packageDeps
-    ? deps.filter(dep => !packageDeps.includes(dep))
-    : deps
+const dependenciesMaker = (packageJson: Package.Json) => {
+  const addDeps = (deps: string[], key: Package.Key, packageJson: Package.Json) => {
+    const packageDeps = Object.keys(packageJson[key] || {})
+    const depsToAdd: string[] = packageDeps
+      ? deps.filter(dep => !packageDeps.includes(dep))
+      : deps
 
-  if (!depsToAdd.length) {
-    elog(`${key} are up to date.`)
-    return
+    if (!depsToAdd.length) {
+      elog(`${key} are up to date.`)
+      return
+    }
+
+    const isDev = key == Package.Key.DevDependencies
+    const command = `yarn add ${isDev ? '--dev ' : ''}${depsToAdd.join(' ')}`
+    enframeExec(command)
   }
 
-  const isDev = key == Package.Key.DevDependencies
-  const command = `yarn add ${isDev ? '--dev ' : ''}${depsToAdd.join(' ')}`
-  enframeExec(command)
-}
-
-const dependenciesMaker = (packageJson: Package.Json) => {
   addDeps(DEPENDENCIES, Package.Key.Dependencies, packageJson)
   addDeps(DEV_DEPENDENCIES, Package.Key.DevDependencies, packageJson)
 }
 
-const scriptsMaker = (
-  scripts: Package.Json[Package.Key.Scripts]
-): Package.Json[Package.Key.Scripts] => {
-  const enframeScripts = {
-    build: 'parcel build src/front/index.html',
-    start: 'ts-node src/back/server.ts',
-    test: 'mocha',
-    cy: 'yarn cypress open',
-    watch: "onchange 'src/**' -- yarn build && yarn start",
-    lint: 'eslint --ext .ts,.tsx ./'
-  }
+const SCRIPTS = {
+  build: 'parcel build src/front/index.html',
+  start: 'ts-node src/back/server.ts',
+  test: 'mocha',
+  cy: 'yarn cypress open',
+  watch: 'nodemon',
+  lint: 'eslint --ext .ts,.tsx ./'
+}
 
-  const newScripts = scripts ? { ...scripts, ...enframeScripts } : enframeScripts
+type ScriptsKey = Package.Json[Package.Key.Scripts]
+const scriptsMaker = (scripts: ScriptsKey): ScriptsKey => {
+  const newScripts = scripts ? { ...scripts, ...SCRIPTS } : SCRIPTS
   return newScripts
 }
 
-const getPackageJson = (): Package.Json => {
-  return importFresh(rootDir('package.json')) as Package.Json
-}
-
 export const packageJsonMaker = () => {
+  const getPackageJson = () => importFresh(rootDir('package.json')) as Package.Json
+  let packageJson: Package.Json = getPackageJson()
   dependenciesMaker(getPackageJson())
 
-  const packageJson = getPackageJson()
+  packageJson = getPackageJson()
   const newScripts = packageJson[Package.Key.Scripts]
   packageJson[Package.Key.Scripts] = scriptsMaker(newScripts)
 

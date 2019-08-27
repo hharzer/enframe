@@ -11,6 +11,7 @@
 1. introduce psql
 1. introduce Redux
 1. introduce integration tests
+1. Well-order the package.json
 1. deploy to app stores?
 1. Investigate post-heroku deploy steps. I.e., automated custom domain setup via heroku CLI? Automated domain registration (far-fetched)?
 1. Programmatic index.html generation?
