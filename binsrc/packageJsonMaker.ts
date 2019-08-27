@@ -92,7 +92,7 @@ const scriptsMaker = (
     test: 'mocha',
     cy: 'yarn cypress open',
     watch: "onchange 'src/**' -- yarn build && yarn start",
-    lint: 'eslint src/'
+    lint: 'eslint --ext .ts,.tsx src/'
   }
 
   const newScripts = scripts ? { ...scripts, ...enframeScripts } : enframeScripts
