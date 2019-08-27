@@ -1,83 +1,82 @@
-import {
-  copyFileSync,
-  writeFileSync,
-  existsSync,
-  mkdirSync,
-  readFileSync
-} from 'fs'
+import { copyFileSync, writeFileSync, existsSync, mkdirSync, readFileSync } from 'fs'
 import { enframeDir, rootDir, elog } from './enframe'
-import { enframeConfig } from './enframeConfig';
+import { enframeConfig } from './enframeConfig'
 
+const { appName } = enframeConfig
 const logTouch = (name: string) => elog(`touched ${name}`)
+const efRootDir = (filePath: string) => enframeDir(`srcapp/${filePath}`)
 
-const makeFiles = (files: string[]) => {
-  files.forEach(file => {
-    copyFileSync(enframeDir(file), rootDir(file))
-    logTouch(file)
+const rootFileMaker = () => {
+  interface RootFileCopyData {
+    [efFileName: string]: string
+  }
+
+  const rootFileCopyData: RootFileCopyData = {
+    '.eslintrc.json': '.eslintrc.json',
+    '.mocharc.json': '.mocharc.json',
+    '.prettierrc': '.prettierrc',
+    'cypress.json': 'cypress.json',
+    gitignore: '.gitignore',
+    LICENSE: 'LICENSE',
+    'tsconfig.json': 'tsconfig.json'
+  }
+
+  interface RootFileWriteData {
+    [efFileName: string]: {
+      fileName: string
+      fileGenerater(): string
+    }
+  }
+
+  const rootFileWriteData: RootFileWriteData = {
+    'gitlab-ci.yml': {
+      fileName: '.gitlab-ci.yml',
+      fileGenerater: () => {
+        const ci = readFileSync(efRootDir('gitlab-ci.yml'), 'utf8')
+        const newCi = ci.replace(/ENFRAME_APP_NAME/g, appName)
+        return newCi
+      }
+    }
+  }
+
+  Object.entries(rootFileCopyData).forEach(([efFileName, appFileName]) => {
+    copyFileSync(efRootDir(efFileName), rootDir(appFileName))
+    logTouch(appFileName)
+  })
+
+  Object.entries(rootFileWriteData).forEach(([_, writer]) => {
+    writeFileSync(efRootDir(writer.fileName), writer.fileGenerater())
+    logTouch(writer.fileName)
   })
 }
 
-const { appName } = enframeConfig
-
-const generateGitlabCiYmlFile = () => {
-  const ci = readFileSync(enframeDir('.gitlab-ci.yml'), 'utf8')
-  const newCi = ci.replace(/ENFRAME_APP_NAME/g, appName)
-  return newCi
-}
-
-const rootFileMaker = () => {
-  const files = [
-    'tsconfig.json',
-    '.prettierrc',
-    '.eslintrc.json',
-    '.mocharc.json',
-    'LICENSE',
-    'cypress.json'
-  ]
-
-  makeFiles(files)
-
-  copyFileSync(enframeDir('gitignore'), rootDir('.gitignore'))
-  logTouch('.gitignore')
-
-  writeFileSync(rootDir('.gitlab-ci.yml'), generateGitlabCiYmlFile())
-  logTouch('.gitlab-ci.yml')
-}
-
-const makeBackDir = () => {
-  mkdirSync(rootDir('src/back'), { recursive: true })
-  logTouch('src/back')
-}
-
-const makeBackFiles = () => {
-  const files = ['src/back/server.ts']
-
-  makeFiles(files)
-}
-
-const makeFrontDir = () => {
-  mkdirSync(rootDir('src/front'), { recursive: true })
-  logTouch('src/front')
-}
-
-const makeFrontFiles = () => {
-  const files = [
-    'src/front/App.test.tsx',
-    'src/front/App.tsx',
-    'src/front/index.html',
-    'src/front/index.tsx',
-    'src/front/stylesheet.css'
-  ]
-
-  makeFiles(files)
-}
-
 const srcFileMaker = () => {
-  const isBackDir = existsSync(rootDir('src/back'))
-  if (!isBackDir) makeBackDir()
+  const makeFiles = (files: string[]) => {
+    files.forEach(file => {
+      copyFileSync(efRootDir(file), rootDir(file))
+      logTouch(file)
+    })
+  }
 
-  const isFrontDir = existsSync(rootDir('src/front'))
-  if (!isFrontDir) makeFrontDir()
+  const makeBackFiles = () => {
+    const isBackDir = existsSync(rootDir('src/back'))
+    if (!isBackDir) mkdirSync(rootDir('src/back'), { recursive: true })
+    const backFiles = ['src/back/server.ts']
+    makeFiles(backFiles)
+  }
+
+  const makeFrontFiles = () => {
+    const isFrontDir = existsSync(rootDir('src/front'))
+    if (!isFrontDir) mkdirSync(rootDir('src/front'), { recursive: true })
+    const frontFiles = [
+      'App.test.tsx',
+      'App.tsx',
+      'index.html',
+      'index.tsx',
+      'stylesheet.css'
+    ]
+    makeFiles(frontFiles.map(file => `src/front/${file}`))
+  }
 
   makeBackFiles()
   makeFrontFiles()
