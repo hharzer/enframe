@@ -44,7 +44,7 @@ const rootFileMaker = () => {
     logTouch(appFileName)
   })
 
-  Object.entries(rootFileWriteData).forEach(([_, writer]) => {
+  Object.entries(rootFileWriteData).forEach(([, writer]) => {
     writeFileSync(efRootDir(writer.fileName), writer.fileGenerater())
     logTouch(writer.fileName)
   })

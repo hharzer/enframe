@@ -33,7 +33,7 @@ const create = (app: string) => {
   }
 }
 
-export const herokuMaker = ({ isHeroku, shouldRunHerokuMaker }: HerokuStatus) => {
+export const herokuMaker = ({ shouldRunHerokuMaker }: HerokuStatus) => {
   if (!shouldRunHerokuMaker) {
     elog('Skipping Heroku app creation.')
     return

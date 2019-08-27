@@ -1,8 +1,10 @@
-import { rootDir } from './enframe';
+import { rootDir } from './enframe'
+import importFresh from 'import-fresh'
 
 interface EnframeConfig {
   appName: string
   gitlabRemoteSSH: string
 }
 
-export const enframeConfig: EnframeConfig = require(rootDir('enframe.json'))
+const enframeConfig = importFresh(rootDir('enframe.json')) as EnframeConfig
+export { enframeConfig }

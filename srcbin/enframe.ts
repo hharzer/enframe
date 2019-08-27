@@ -9,6 +9,11 @@ import { packageJsonMaker } from './packageJsonMaker'
 import { gitPush, gitInit } from './git'
 import { herokuMaker, herokuChecker } from './herokuMaker'
 import { fileMaker } from './fileMaker'
+import { promisify } from 'util'
+
+export const elog = (message: string) => {
+  console.log(`Enframe: ${message}`)
+}
 
 export const enframeExec = (command: string, stdioInherit?: boolean) => {
   elog(`Executing: ${command}\n`)
@@ -28,16 +33,13 @@ export const commandDoesNotError = (command: string): boolean => {
 }
 
 export const commandDoesNotErrorAsync = async (command: string): Promise<boolean> => {
+  const pExec = promisify(exec)
   try {
-    await exec(command)
+    await pExec(command)
     return true
   } catch {
     return false
   }
-}
-
-export const elog = (message: string) => {
-  console.log(`Enframe: ${message}`)
 }
 
 const yarnExists = (): boolean => {
