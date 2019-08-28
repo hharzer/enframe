@@ -9,9 +9,8 @@ You focus on `src/`, enframe will take care of the rest.
 
 ## Todos until v1
 
-1. Service worker
 1. introduce psql
-1. introduce Redux
+1. webmanifest
 1. introduce integration tests
 1. Well-order the package.json
 1. deploy to app stores?

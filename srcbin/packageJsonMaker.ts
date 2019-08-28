@@ -38,7 +38,10 @@ const DEPENDENCIES = [
   'compression',
   '@types/compression',
   'helmet',
-  '@types/helmet'
+  '@types/helmet',
+  'redux-starter-kit',
+  'react-redux',
+  '@types/react-redux'
 ]
 
 const DEV_DEPENDENCIES = [
@@ -89,7 +92,8 @@ const SCRIPTS = {
   start: 'ts-node src/back/server.ts',
   test: 'mocha',
   cy: 'yarn cypress open',
-  watch: 'nodemon',
+  'watch-front': 'parcel src/front/index.html',
+  'watch-back': 'nodemon',
   lint: 'eslint --ext .ts,.tsx ./'
 }
 

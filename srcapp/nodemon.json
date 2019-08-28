@@ -1,5 +1,5 @@
 {
   "ext": ".ts,.tsx,.json,.html,.css,.js",
   "ignore": "dist/",
-  "exec": "yarn build && yarn start"
+  "exec": "yarn start"
 }
