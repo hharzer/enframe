@@ -67,3 +67,5 @@ A useful aspect of enframe is the ability to no longer worry about application i
 * The Gitlab repository does not need to exist before you set it as an upstream. If the repository does not already exist, Gitlab will create the project for you on first push.
 
 * The app name you choose will need to be unique on Heroku. For example, the above app name, `new-app`, will try to create two new application on Heroku, `new-app-staging` and `new-app-prod`. If those heroku app names are taken, you will not be able to make them.
+
+* Left untouched is .envrc from direnv. This holds the local DATABASE_URL for psql connections. You do not need to use direnv, but you will need to somehow supply the node `process.env.DATABASE_URL` with the correct value for local development to work appropriately.

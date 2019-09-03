@@ -41,7 +41,9 @@ const DEPENDENCIES = [
   '@types/helmet',
   'redux-starter-kit',
   'react-redux',
-  '@types/react-redux'
+  '@types/react-redux',
+  'pg',
+  '@types/pg'
 ]
 
 const DEV_DEPENDENCIES = [

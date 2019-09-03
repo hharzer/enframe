@@ -24,11 +24,18 @@ export const herokuChecker = async (): Promise<HerokuStatus> => {
   return { isHeroku, isStaging, isProd, shouldRunHerokuMaker }
 }
 
-const create = (app: string) => {
+const createApp = (app: string) => {
   try {
     enframeExec(`heroku apps:create ${app}`)
   } catch (e) {
-    elog(`Failed to create app ${app}`)
+    elog(`Failed to create ${app}`)
+    elog(e)
+  }
+
+  try {
+    enframeExec(`heroku addons:create --app ${app} heroku-postgresql:hobby-dev`)
+  } catch (e) {
+    elog(`Failed to create database for ${app}`)
     elog(e)
   }
 }
@@ -39,6 +46,6 @@ export const herokuMaker = ({ shouldRunHerokuMaker }: HerokuStatus) => {
     return
   }
 
-  create(stagingName)
-  create(prodName)
+  createApp(stagingName)
+  createApp(prodName)
 }

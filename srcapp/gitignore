@@ -9,3 +9,6 @@ dist
 # from cypress
 cypress/videos
 cypress/screenshots
+
+# from direnv
+.envrc
