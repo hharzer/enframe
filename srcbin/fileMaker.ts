@@ -39,18 +39,17 @@ const makeRoot = () => {
   elog(`Updated the following root files, ${allFiles.join(', ')}`)
 }
 
-const makeSrc = () => {
-  copySync(efRootDir('src/'), rootDir('src/'))
-  elog(`Copied the contents of ${efRootDir('src/')} into ${rootDir('src/')}`)
+const copyFolder = (folder: string) => {
+  copySync(efRootDir(folder), rootDir(folder))
+  elog(`Copied the contents of ${efRootDir(folder)} into ${rootDir(folder)}`)
 }
 
-const makeCypress = () => {
-  copySync(efRootDir('cypress/'), rootDir('cypress/'))
-  elog(`Copied the contents of ${efRootDir('cypress/')} into ${rootDir('cypress/')}`)
+const copyFolders = () => {
+  const folders = ['src/', 'cypress/', 'scripts/']
+  folders.forEach(folder => copyFolder(folder))
 }
 
 export const fileMaker = () => {
   makeRoot()
-  makeSrc()
-  makeCypress()
+  copyFolders()
 }

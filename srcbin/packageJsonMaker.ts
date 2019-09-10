@@ -95,6 +95,7 @@ const SCRIPTS = {
   'watch-front': 'parcel src/index.html',
   'watch-back': 'nodemon',
   test: 'mocha',
+  'integration-test': './scripts/integration-test.sh',
   cy: 'yarn cypress open',
   lint: 'eslint --ext .ts,.tsx ./'
 }
