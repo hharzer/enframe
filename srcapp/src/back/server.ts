@@ -3,6 +3,9 @@ import path from 'path'
 import compression from 'compression'
 import helmet from 'helmet'
 import { apiRouter } from './apiRouter'
+import { db } from './db'
+
+db.seed()
 
 const PORT = process.env.PORT || '3000'
 

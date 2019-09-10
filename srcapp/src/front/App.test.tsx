@@ -11,6 +11,6 @@ configure({ adapter: new Adapter() })
 describe('App', () => {
   it('greets the user', () => {
     const wrapper = shallow(<App />)
-    expect(wrapper).to.have.text('Hello, World!')
+    expect(wrapper).to.contain.text('Example Todo App')
   })
 })
