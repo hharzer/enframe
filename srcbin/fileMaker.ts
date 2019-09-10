@@ -44,7 +44,13 @@ const makeSrc = () => {
   elog(`Copied the contents of ${efRootDir('src/')} into ${rootDir('src/')}`)
 }
 
+const makeCypress = () => {
+  copySync(efRootDir('cypress/'), rootDir('cypress/'))
+  elog(`Copied the contents of ${efRootDir('cypress/')} into ${rootDir('cypress/')}`)
+}
+
 export const fileMaker = () => {
   makeRoot()
   makeSrc()
+  makeCypress()
 }

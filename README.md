@@ -11,10 +11,12 @@ You focus on `src/`, enframe will take care of the rest.
 
 1. introduce integration tests
 1. Well-order the package.json
+1. Factor out explicit references to the todo app.
 1. deploy to app stores?
 1. Investigate post-heroku deploy steps. I.e., automated custom domain setup via heroku CLI? Automated domain registration (far-fetched)?
 1. Programmatic index.html generation?
 1. Fix "attempt to cache non-get-requests" workbox.
+1. More robust db migration solution (maybe nest.js?)
 
 ## Before enframing
 
