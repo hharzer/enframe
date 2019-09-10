@@ -111,8 +111,8 @@ export const packageJsonMaker = () => {
   dependenciesMaker(getPackageJson())
 
   packageJson = getPackageJson()
-  const newScripts = packageJson[Package.Key.Scripts]
-  packageJson[Package.Key.Scripts] = scriptsMaker(newScripts)
+  const currentScripts = packageJson[Package.Key.Scripts]
+  packageJson[Package.Key.Scripts] = scriptsMaker(currentScripts)
 
   writeFileSync(rootDir('package.json'), `${JSON.stringify(packageJson, null, 2)}\n`)
 }
