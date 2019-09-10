@@ -1,19 +1,30 @@
-import { Client } from 'pg'
+import { Pool } from 'pg'
+import { ITodo } from '../Todo.interface'
+import { pore } from '../pore'
 
-export async function query(queryString, callback) {
-  const client = new Client({
-    connectionString: process.env.DATABASE_URL,
-    ssl: true
-  })
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: true
+})
 
-  client.connect()
+const query = (text: string, params = []) => pool.query(text, params)
 
-  let rows: any
-
-  client.query(queryString, (err, res) => {
-    if (err) throw err
-    rows = res.rows.map(row => JSON.stringify(row))
-    client.end()
-    callback(rows)
-  })
+export const db = {
+  getTodos: async (): Promise<ITodo[]> => {
+    const [{ rows }, err] = await pore(query('SELECT * FROM todos;'))
+    if (err) return []
+    return rows
+  },
+  addTodo: async (todo: ITodo): Promise<void> => {
+    const insert = 'INSERT INTO todos (text, completed) VALUES ($1, $2);'
+    await query(insert, [todo.text, todo.completed])
+  },
+  deleteTodo: async (id: string): Promise<void> => {
+    await query('DELETE FROM todos WHERE id=$1;', [id])
+  },
+  updateTodo: async ({ id, text, completed }: Required<ITodo>): Promise<void> => {
+    const update = 'UPDATE todos SET text = $2, completed = $3 WHERE id=$1;'
+    const params = [id, text, completed]
+    await query(update, params)
+  }
 }

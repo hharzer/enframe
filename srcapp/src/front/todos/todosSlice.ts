@@ -1,37 +1,81 @@
-import { createSlice } from 'redux-starter-kit'
-
-let nextTodoId = 0
-export const resetTodoId = () => (nextTodoId = 0)
-
-export interface ITodo {
-  id: number
-  text: string
-  completed: boolean
-}
+import { createSlice, PayloadAction } from 'redux-starter-kit'
+import { ITodo } from '../../Todo.interface'
+import { Dispatch } from 'redux'
+import { pore } from '../../pore'
+import { api } from '../api'
 
 const todosSlice = createSlice({
   slice: 'todos',
   initialState: [],
   reducers: {
-    addTodo: {
-      reducer: (state: ITodo[], action) => {
-        const { id, text } = action.payload
-        state.push({ id, text, completed: false })
-      },
-      prepare: text => {
-        return { payload: { text, id: nextTodoId++ } }
-      }
+    addTodoLocal: (state: ITodo[], action: PayloadAction<{ todo: ITodo }>) => {
+      state.push(action.payload.todo)
     },
-    toggleTodo: (state, action) => {
+    deleteTodoLocal: (state: ITodo[], action: PayloadAction<{ id: number }>) => {
+      return state.filter(todo => todo.id != action.payload.id)
+    },
+    toggleTodo: (state, action: PayloadAction<{ id: number }>) => {
       const todo = state.find(todo => todo.id === action.payload.id)
       if (todo) {
         todo.completed = !todo.completed
+      }
+    },
+    overwriteTodos: (state: ITodo[], action: PayloadAction<{ todos: ITodo[] }>) => {
+      const todos: ITodo[] = action.payload.todos
+      return todos
+    },
+    updateTodoLocal: (state, action: PayloadAction<{ todo: Required<ITodo> }>) => {
+      const newTodo: ITodo = action.payload.todo
+      const oldTodo = state.find(oldTodo => oldTodo.id === newTodo.id)
+      if (oldTodo) {
+        oldTodo.text = newTodo.text
+        oldTodo.completed = newTodo.completed
       }
     }
   }
 })
 
+export const reducer = todosSlice.reducer
 export const {
-  reducer,
-  actions: { addTodo, toggleTodo }
-} = todosSlice
+  addTodoLocal,
+  toggleTodo,
+  overwriteTodos,
+  deleteTodoLocal,
+  updateTodoLocal
+} = todosSlice.actions
+
+const dispatchGetTodos = async (dispatch: Dispatch) => {
+  const [todos, err] = await pore(api.getTodos())
+  if (err) return
+  dispatch(overwriteTodos({ todos }))
+}
+
+export const getTodos = () => dispatchGetTodos
+
+export const addTodo = (todo: ITodo) => {
+  return async (dispatch: Dispatch) => {
+    dispatch(addTodoLocal({ todo }))
+    const [, err] = await pore(api.postTodo(todo))
+    if (err) return
+    dispatchGetTodos(dispatch)
+  }
+}
+
+export const deleteTodo = (id: number) => {
+  return async (dispatch: Dispatch) => {
+    dispatch(deleteTodoLocal({ id }))
+    const [, err] = await pore(api.deleteTodo(id))
+    if (!err) return
+    dispatchGetTodos(dispatch)
+  }
+}
+
+export const completeTodo = (todo: Required<ITodo>) => {
+  return async (dispatch: Dispatch) => {
+    const completedTodo = { ...todo, completed: true }
+    dispatch(updateTodoLocal({ todo: completedTodo }))
+    const [, err] = await pore(api.updateTodo(completedTodo))
+    if (!err) return
+    dispatchGetTodos(dispatch)
+  }
+}
