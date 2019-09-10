@@ -90,12 +90,12 @@ const dependenciesMaker = (packageJson: Package.Json) => {
 }
 
 const SCRIPTS = {
-  build: 'parcel build src/front/index.html',
+  build: 'parcel build src/index.html',
   start: 'ts-node src/back/server.ts',
+  'watch-front': 'parcel src/index.html',
+  'watch-back': 'nodemon',
   test: 'mocha',
   cy: 'yarn cypress open',
-  'watch-front': 'parcel src/front/index.html',
-  'watch-back': 'nodemon',
   lint: 'eslint --ext .ts,.tsx ./'
 }
 

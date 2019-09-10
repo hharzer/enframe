@@ -1,11 +1,11 @@
 importScripts('https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js');
 
 if (workbox) {
+  workbox.routing.setDefaultHandler(new workbox.strategies.NetworkFirst())
+  
   workbox.routing.registerRoute(
     /\.(?:js|css)$/,
-    new workbox.strategies.StaleWhileRevalidate({
-      cacheName: 'static-resources',
-    })
+    new workbox.strategies.StaleWhileRevalidate()
   );
 
   workbox.routing.registerRoute(

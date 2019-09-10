@@ -21,9 +21,16 @@ export const AddTodo: React.FC = () => {
   return (
     <>
       <h2>Add a Todo</h2>
-      <form onSubmit={submit}>
-        <input value={todoText} onChange={e => setTodoText(e.target.value)} />
-        <input type="submit" />
+      <form className="add-todo-form" onSubmit={submit}>
+        <div>
+          <label htmlFor="todo-text">Todo Text</label>
+          <input
+            id="todo-text"
+            value={todoText}
+            onChange={e => setTodoText(e.target.value)}
+          />
+        </div>
+        <input type="submit"/>
       </form>
     </>
   )

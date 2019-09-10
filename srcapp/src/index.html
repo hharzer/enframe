@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="Description" content="Enframe example todo app." />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <title>Enframe Example Todo App</title>
+    <!-- Chrome, Firefox OS and Opera -->
+    <meta name="theme-color" content="#4285f4" />
+  </head>
+  <body>
+    <noscript>This page requires Javascript to function correctly.</noscript>
+    <div id="root"></div>
+    <script src="front/index.tsx"></script>
+    <link rel="stylesheet" href="front/stylesheet.css" />
+    <script>
+      // Check that service workers are supported
+      if ('serviceWorker' in navigator) {
+        // Use the window load event to keep the page load performant
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/service-worker.js')
+        })
+      }
+    </script>
+  </body>
+</html>

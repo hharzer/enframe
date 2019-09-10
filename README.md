@@ -9,8 +9,6 @@ You focus on `src/`, enframe will take care of the rest.
 
 ## Todos until v1
 
-1. introduce psql
-1. webmanifest and mobile friendlyness
 1. introduce integration tests
 1. Well-order the package.json
 1. deploy to app stores?
@@ -69,3 +67,8 @@ A useful aspect of enframe is the ability to no longer worry about application i
 * The app name you choose will need to be unique on Heroku. For example, the above app name, `new-app`, will try to create two new application on Heroku, `new-app-staging` and `new-app-prod`. If those heroku app names are taken, you will not be able to make them.
 
 * Left untouched is .envrc from direnv. This holds the local DATABASE_URL for psql connections. You do not need to use direnv, but you will need to somehow supply the node `process.env.DATABASE_URL` with the correct value for local development to work appropriately.
+
+## Credits / Shoutouts
+
+* Open source Feather Icons: https://feathericons.com/
+* Favicon.io: https://favicon.io/favicon-converter/

@@ -2,3 +2,20 @@
   display: flex;
   justify-content: center;
 }
+
+.add-todo-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.todo {
+  display: flex;
+  justify-content: space-between;
+  border: 1px solid black;
+  padding: 10px;
+  margin: 10px 0;
+}
+
+.todo.completed {
+  text-decoration: line-through;
+}
